@@ -25,7 +25,8 @@ namespace OnlineProdajaPica.Controllers
         {
             if (!string.IsNullOrWhiteSpace(HttpContext.Session.GetString("Cart")))
             {
-                kosarica = JsonConvert.DeserializeObject<List<Product>>(HttpContext.Session.GetString("Cart"));
+                kosarica = JsonConvert.DeserializeObject<List<Product>>(HttpContext.Session.GetString("Cart")) 
+                    ?? new List<Product>();
                 return View(kosarica);
             }
             kosarica = new List<Product>();
@@ -35,15 +36,9 @@ namespace OnlineProdajaPica.Controllers
         public IActionResult AddToCart(int? id)
         {
             var productToAdd = _context.Products.Single(p => p.Id == id);
-            try
-            {
-                kosarica = JsonConvert.DeserializeObject<List<Product>>(HttpContext.Session.GetString("Cart"));
-            }
-            catch
-            {
-                kosarica = new List<Product>();
-            }
-            
+            kosarica = JsonConvert.DeserializeObject<List<Product>>(HttpContext.Session.GetString("Cart"))
+                    ?? new List<Product>();
+          
             if (kosarica.Exists(p => p.Id == productToAdd.Id))
             {
                 var productInCart = kosarica.Single(p => p.Id == productToAdd.Id);
