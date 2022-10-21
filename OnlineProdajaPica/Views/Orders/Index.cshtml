@@ -1,0 +1,45 @@
+﻿@model IEnumerable<OnlineProdajaPica.ViewModels.OrdersViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Narudžbe</h2>
+
+<br />
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Username)
+        </th>
+        <th>
+            Narudžba
+        </th>
+        <th>
+            Vrijeme narudžbe
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Username)
+            </td>
+            <td>
+                @foreach (var product in item.Products)
+                {
+                    <p>@product.Name - @product.Quantity</p>
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DatumNarudzbe)
+            </td>
+            <td>
+                @Html.ActionLink("Opširnije", "Details", new { id=item.Id })
+            </td>
+        </tr>
+    }
+
+</table>
