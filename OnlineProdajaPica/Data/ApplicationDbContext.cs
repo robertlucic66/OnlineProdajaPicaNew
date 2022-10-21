@@ -14,6 +14,7 @@ namespace OnlineProdajaPica.Data
 
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Order> Orders { get; set; }
         public DbSet<OnlineProdajaPica.ViewModels.ProductViewModel> ProductViewModel { get; set; }
     }
 }
