@@ -2,12 +2,12 @@
 @{
 }
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Edit", "Products", FormMethod.Post, new { encType = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>ProductViewModel</h4>
+        <h4>Uređivanje: @Model.Name</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Id)
@@ -45,13 +45,18 @@
         </div>
 
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            @Html.LabelFor(model=>model.ImageUrl, "Slika", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="file" name="userfile" class="form-control" />
+            </div>
+        </div>
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10" style="margin-top:10px;">
+                <input type="submit" value="Sremi" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Nazad na listu</a>
             </div>
         </div>
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>

@@ -20,15 +20,14 @@ namespace OnlineProdajaPica.Controllers
         }
 
         // GET: Products
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var listaProizvoda = _context.Products.Include(p => p.Category).ToList();
-            return View(listaProizvoda);
+            return View(await _context.Products.Include(p=>p.Category).ToListAsync());
         }
 
-        public ActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var categories = _context.Categories.ToList();
+            var categories = await _context.Categories.ToListAsync();
             var viewModel = new ProductViewModel()
             {
                 Categories = categories
@@ -38,18 +37,14 @@ namespace OnlineProdajaPica.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(Product product, IFormFile userfile)
+        public async Task<IActionResult> Create(Product product, IFormFile userfile)
         {
-            
-
-           
-
             string filename = userfile.FileName;
             filename = Path.GetFileName(filename);
             string uploadFilePath = Path.Combine
                 (Directory.GetCurrentDirectory(), "wwwroot\\Images", filename);
             var stream = new FileStream(uploadFilePath, FileMode.Create);
-            userfile.CopyToAsync(stream);
+            await userfile.CopyToAsync(stream);
             product.ImageUrl = "/images/" + userfile.FileName;
 
             if (!ModelState.IsValid)
@@ -58,20 +53,25 @@ namespace OnlineProdajaPica.Controllers
             }
             _context.Products.Add(product);
             _context.SaveChanges();
+            TempData["success"] = "Uspješno kreiran proizvod!";
 
             return RedirectToAction("Index");
         }
 
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            if (id < 1)
+            if (id < 1 || id == null)
             {
-                return RedirectToAction("Index");
+                return NotFound();
             }
             try
             {
-                var productToEdit = _context.Products.Single(p => p.Id == id);
+                var productToEdit = await _context.Products.FindAsync(id);
                 var categories = _context.Categories.ToList();
+                if(productToEdit == null)
+                {
+                    return NotFound();
+                }
                 var viewModel = new ProductViewModel(productToEdit)
                 {
                     Categories = categories
@@ -86,7 +86,7 @@ namespace OnlineProdajaPica.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(int id, Product updatedProduct)
+        public ActionResult Edit(int id, Product updatedProduct, IFormFile? userfile)
         {
             try
             {
@@ -96,6 +96,20 @@ namespace OnlineProdajaPica.Controllers
                 {
                     Categories = categories
                 };
+                if (userfile != null)
+                {
+                    string filename = userfile.FileName;
+                    filename = Path.GetFileName(filename);
+                    string uploadFilePath = Path.Combine
+                        (Directory.GetCurrentDirectory(), "wwwroot\\Images", filename);
+                    var stream = new FileStream(uploadFilePath, FileMode.Create);
+                    userfile.CopyToAsync(stream);
+                    updatedProduct.ImageUrl = "/images/" + userfile.FileName;
+                }
+                else
+                {
+                    updatedProduct.ImageUrl = productToEdit.ImageUrl;
+                }
 
                 if (!ModelState.IsValid)
                 {
@@ -104,6 +118,7 @@ namespace OnlineProdajaPica.Controllers
 
                 _context.Entry(productToEdit).CurrentValues.SetValues(updatedProduct);
                 _context.SaveChanges();
+                TempData["success"] = "Proizvod je uspješno izmijenjen!";
                 return RedirectToAction("Index");
             }
             catch
@@ -113,13 +128,14 @@ namespace OnlineProdajaPica.Controllers
 
         }
 
-        public ActionResult Delete(int id)
+        public IActionResult Delete(int id)
         {
             try
             {
                 var productToDelete = _context.Products.Single(p => p.Id == id);
                 _context.Products.Remove(productToDelete);
                 _context.SaveChanges();
+                TempData["success"] = "Proizvod je obrisan!";
                 return RedirectToAction("Index");
             }
             catch
@@ -128,17 +144,20 @@ namespace OnlineProdajaPica.Controllers
             }
         }
 
-        public ActionResult Details(int id)
+        public async Task<IActionResult> Details(int? id)
         {
-            try
+            if (id == null)
             {
-                var product = _context.Products.Include(p => p.Category).Single(p => p.Id == id);
-                return View(product);
+                return NotFound();
             }
-            catch
+            var product = await _context.Products.Include(p => p.Category)
+                .FirstOrDefaultAsync(p => p.Id == id);
+            if(product == null)
             {
-                return Content("Greška");
+                return NotFound();
             }
+
+            return View(product);
         }
     }
 }
