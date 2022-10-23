@@ -1,6 +1,11 @@
-﻿@{
+﻿@model IEnumerable<OnlineProdajaPica.Models.Product>
+@{
     ViewData["Title"] = "Home Page";
 }
+    <link rel="stylesheet" href="~/css/customNumber.css" />
+
+
+
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
@@ -8,4 +13,65 @@
 </div>
 
 
-<img src="~/images/img-20220416-wa0007.jpg"/>
+
+<div class="row pb-3">
+    @foreach (var product in Model)
+    {
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+            <div class="row p-3">
+               <div class="col-12 p-1" style="border:1px solid #008cba; border-radius: 5px;">
+                    <div class="card p-4">
+                        <img src="@product.ImageUrl" class="rounded" style="height:400px; align-self:center;"/>   
+                        <div style="margin-top:20px;">
+                            <div style="width:80%; float:left;">
+                                <p class="card-title h5 text-primary">@product.Name</p>
+                            </div>
+                            <div style="width:20%; float:right;">
+                                <p class="card-title text-secondary" style="text-align:right;">@product.Description</p>
+                            </div>
+                        </div>                    
+                        <div>
+                            <p class="card-title h5 text-secondary">@product.Price.ToString("0.00") KN/kom</p>                           
+                        </div>
+                        <div style="text-align:center;">
+                            <div class="number-input-container">
+                                <button type="button"
+                                    class="button-decrement"
+                                    onclick="setNumber(event)"
+                                    data-input-id="quantityInput-@product.Id"
+                                    data-operation="decrement">
+                                </button>
+                                <div class="number-input">
+                                    <input type="number"
+                                       id="quantityInput-@product.Id"
+                                       name="quantityInput-@product.Id"
+                                       class="number-input-text-box"
+                                       value="1"
+                                       min="1"
+                                       max="360"
+                                       oninput="handleNumberInput()"
+                                       onblur="handleNumberInputBlur(event)"
+                                       data-step="1" />
+                                </div>
+                                <button type="button"
+                                    class="button-increment"
+                                    onclick="setNumber(event)"
+                                    data-input-id="quantityInput-@product.Id"
+                                    data-operation="increment">
+                                </button>
+                            </div>
+                            <div style="margin-top:7px;">
+                                <a onclick="myFunction(@product.Id)" href="#" id="btnAddToCart-@product.Id" class="btn btn-success">Dodaj u košaricu</a>
+                            </div>
+                        </div>
+                    </div>
+               </div>
+
+            </div>
+
+        </div>
+    }
+</div>
+
+<script src="~/js/customNumber.js" />
+

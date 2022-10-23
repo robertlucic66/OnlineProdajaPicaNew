@@ -1,6 +1,8 @@
-﻿using OnlineProdajaPica.Models;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using OnlineProdajaPica.Models;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OnlineProdajaPica.ViewModels
 {
@@ -27,6 +29,10 @@ namespace OnlineProdajaPica.ViewModels
         [DisplayName("Kategorija")]
         public int CategoryId { get; set; }
 
+        [Required]
+        [Column(TypeName = "money")]
+        public decimal Price { get; set; }
+
         [DisplayName("Slika")]
         public string? ImageUrl { get; set; }
 
@@ -43,6 +49,7 @@ namespace OnlineProdajaPica.ViewModels
             NumberInStock = product.NumberInStock;
             CategoryId = product.CategoryId;
             ImageUrl = product.ImageUrl;
+            Price = product.Price;
         }
     }
 }

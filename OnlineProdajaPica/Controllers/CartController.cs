@@ -36,8 +36,12 @@ namespace OnlineProdajaPica.Controllers
             return View(kosarica);
         }
 
-        public IActionResult AddToCart(int? id)
+        public IActionResult AddToCart(int? id, int? quantity)
         {
+            if (id < 1 | id == null)
+                return NotFound();
+            if (quantity < 1 | quantity == null)
+                return NotFound();
             var productToAdd = _context.Products.Single(p => p.Id == id);
             if (!string.IsNullOrWhiteSpace(HttpContext.Session.GetString("Cart")))
             {
@@ -52,11 +56,11 @@ namespace OnlineProdajaPica.Controllers
             if (kosarica.Exists(p => p.Id == productToAdd.Id))
             {
                 var productInCart = kosarica.Single(p => p.Id == productToAdd.Id);
-                productInCart.Quantity += 1;
+                productInCart.Quantity += (int)quantity;
             }
             else
             {
-                productToAdd.Quantity += 1;
+                productToAdd.Quantity += (int)quantity;
                 kosarica.Add(productToAdd);
             }
             HttpContext.Session.SetString("Cart", JsonConvert.SerializeObject(kosarica));
@@ -94,7 +98,8 @@ namespace OnlineProdajaPica.Controllers
                 Proizvodi = String.Join(",", productList),
                 Kolicine = String.Join(",", quantityList),
                 UserId = _userManager.GetUserId(HttpContext.User),
-                DatumNarudzbe = DateTime.Now
+                DatumNarudzbe = DateTime.Now,
+                Dostavljeno = false
             };
 
             _context.Orders.Add(order);

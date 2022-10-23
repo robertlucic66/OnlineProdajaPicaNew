@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineProdajaPica.Data;
 
@@ -11,9 +12,10 @@ using OnlineProdajaPica.Data;
 namespace OnlineProdajaPica.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221022180535_dodanPriceProperty")]
+    partial class dodanPriceProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -243,7 +245,7 @@ namespace OnlineProdajaPica.Data.Migrations
 
                     b.HasIndex("ProductViewModelId");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("OnlineProdajaPica.Models.Order", b =>
@@ -274,7 +276,7 @@ namespace OnlineProdajaPica.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("OnlineProdajaPica.Models.Product", b =>
@@ -312,7 +314,7 @@ namespace OnlineProdajaPica.Data.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("OnlineProdajaPica.ViewModels.ProductViewModel", b =>
@@ -345,7 +347,7 @@ namespace OnlineProdajaPica.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductViewModel", (string)null);
+                    b.ToTable("ProductViewModel");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

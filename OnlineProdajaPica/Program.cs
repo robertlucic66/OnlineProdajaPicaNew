@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using OnlineProdajaPica.Data;
+using System.Security.Policy;
+using System.Web.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +55,10 @@ app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute(
+    name:"AddToCart",
+    pattern:"cart/addtocart/{id}/{quantity}",
+    defaults: new { controller = "Cart", action = "AddToCart", id = UrlParameter.Optional });
 app.MapRazorPages();
 
 app.Run();

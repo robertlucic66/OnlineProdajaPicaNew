@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OnlineProdajaPica.Models
 {
@@ -26,6 +28,10 @@ namespace OnlineProdajaPica.Models
         [Required]
         [DisplayName("Kategorija")]
         public int CategoryId { get; set; }
+
+        [Required]
+        [Column(TypeName = "money")]
+        public decimal Price { get; set; }
 
         [DisplayName("Slika")]
         public string? ImageUrl { get; set; }
