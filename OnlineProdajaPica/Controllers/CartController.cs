@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using OnlineProdajaPica.ViewModels;
 
 namespace OnlineProdajaPica.Controllers
 {
@@ -67,6 +68,15 @@ namespace OnlineProdajaPica.Controllers
             return RedirectToAction("Index");
         }
 
+        public IActionResult ChangeQuantity(int id, int quantity)
+        {
+            kosarica = JsonConvert.DeserializeObject<List<Product>>(HttpContext.Session.GetString("Cart"));
+            var product = kosarica.Where(p => p.Id == id).Single();
+            product.Quantity = quantity;
+            HttpContext.Session.SetString("Cart", JsonConvert.SerializeObject(kosarica));
+            return RedirectToAction("Index");
+        }
+
         public IActionResult RemoveFromCart(int id)
         {
             try
@@ -83,7 +93,49 @@ namespace OnlineProdajaPica.Controllers
             }           
         }
 
-        public IActionResult SendOrder()
+        public IActionResult AddCustomerInfo()
+        {
+            if(string.IsNullOrWhiteSpace(HttpContext.Session.GetString("Cart")))
+            {
+                kosarica = new List<Product>();
+            }
+            else
+            {
+                kosarica = JsonConvert.DeserializeObject<List<Product>>(HttpContext.Session.GetString("Cart"));
+            }           
+            if (kosarica.Count < 1)
+            {
+                TempData["error"] = "Nema proizvoda u košarici!";
+                return RedirectToAction("Index");
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddCustomerInfo(CustomerInfo customerInfo)
+        {
+            return RedirectToAction("OrderCheck", customerInfo);
+        }
+
+        public IActionResult OrderCheck(CustomerInfo customerInfo)
+        {
+            if (customerInfo.Name == null)
+            {
+                return RedirectToAction("AddCustomerInfo");
+            }
+            kosarica = JsonConvert.DeserializeObject<List<Product>>(HttpContext.Session.GetString("Cart"));
+
+            OrderCheckViewModel orderCheckVM = new OrderCheckViewModel()
+            {
+                ProductList = kosarica,
+                CustomerInfo = customerInfo
+            };
+            HttpContext.Session.SetString("CustomerInfo", JsonConvert.SerializeObject(customerInfo));
+
+            return View(orderCheckVM);
+        }
+
+        public IActionResult SendOrder(CustomerInfo customerInfo)
         {
             kosarica = JsonConvert.DeserializeObject<List<Product>>(HttpContext.Session.GetString("Cart"));
             List<int> productList = new List<int>();
@@ -102,6 +154,9 @@ namespace OnlineProdajaPica.Controllers
                 Dostavljeno = false
             };
 
+            customerInfo.UserId = order.UserId;
+            customerInfo.OrderId = order.Id;
+            _context.customerInfos.Add(customerInfo);
             _context.Orders.Add(order);
             _context.SaveChanges();
             HttpContext.Session.SetString("Cart", String.Empty);

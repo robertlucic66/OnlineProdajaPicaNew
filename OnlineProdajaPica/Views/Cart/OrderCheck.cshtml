@@ -1,0 +1,105 @@
+﻿@model OnlineProdajaPica.ViewModels.OrderCheckViewModel
+
+@{
+    ViewBag.Title = "OrderCheck";
+}
+
+<h2>Provjera podataka</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+    </dl>
+</div>
+
+<table class="table">
+    <tr>
+        <th>
+            Naziv proizvoda
+        </th>
+        <th>
+
+        </th>
+        <th>
+            Količina
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.ProductList)
+    {
+        <tr>
+            <td>
+                @item.Name
+            </td>
+            <td>
+                @item.Description
+            </td>
+            <td>
+                @item.Quantity
+            </td>
+        </tr>
+    }
+</table>
+
+<dl class="dl-horizontal">
+    <dt>
+        Ime
+    </dt>
+    <dd>
+        @Model.CustomerInfo.Name
+    </dd>
+    <dt>
+        Prezime
+    </dt>
+    <dd>
+        @Model.CustomerInfo.LastName
+    </dd>
+    <dt>
+        Broj telefona
+    </dt>
+    <dd>
+        @Model.CustomerInfo.PhoneNumber
+    </dd>
+    <dt>
+        Poštanski broj
+    </dt>
+    <dd>
+        @Model.CustomerInfo.PostalCode
+    </dd>
+    <dt>
+        Adresa
+    </dt>
+    <dd>
+        @Model.CustomerInfo.Address
+    </dd>
+    <dt>
+        Grad
+    </dt>
+    <dd>
+        @Model.CustomerInfo.City
+    </dd>
+    <dt>
+        Država
+    </dt>
+    <dd>
+        @Model.CustomerInfo.Country
+    </dd>
+</dl>
+
+@using (Html.BeginForm("SendOrder", "Cart", FormMethod.Post))
+{
+    <input type="hidden" id="Id" name="Id" value="@Model.CustomerInfo.Id" />
+    <input type="hidden" id="UserId" name="UserId" value="@Model.CustomerInfo.UserId" />
+    <input type="hidden" id="Name" name="Name" value="@Model.CustomerInfo.Name" />
+    <input type="hidden" id="LastName" name="LastName" value="@Model.CustomerInfo.LastName" />
+    <input type="hidden" id="PhoneNumber" name="PhoneNumber" value="@Model.CustomerInfo.PhoneNumber" />
+    <input type="hidden" id="PostalCode" name="PostalCode" value="@Model.CustomerInfo.PostalCode" />
+    <input type="hidden" id="City" name="City" value="@Model.CustomerInfo.City" />
+    <input type="hidden" id="Countyry" name="Country" value="@Model.CustomerInfo.Country" />
+    <input type="hidden" id="Address" name="Address" value="@Model.CustomerInfo.Address" />
+    <input type="hidden" id="OrderId" name="OrderId" value="@Model.CustomerInfo.OrderId" />
+
+    <button type="submit" class="btn btn-success">Pošalji narudžbu</button>
+}
+@Html.ActionLink("Nazad", "AddCustomerInfo", "Cart", "", new { @class = "btn btn-default" })

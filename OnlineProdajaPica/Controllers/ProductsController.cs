@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineProdajaPica.Data;
 using OnlineProdajaPica.Models;
 using OnlineProdajaPica.ViewModels;
+using System.Data;
+
 
 namespace OnlineProdajaPica.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ProductsController : Controller
     {
         private ApplicationDbContext _context;
@@ -24,7 +28,7 @@ namespace OnlineProdajaPica.Controllers
         {
             return View(await _context.Products.Include(p=>p.Category).ToListAsync());
         }
-
+      
         public async Task<IActionResult> Create()
         {
             var categories = await _context.Categories.ToListAsync();

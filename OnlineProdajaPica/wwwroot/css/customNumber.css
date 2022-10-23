@@ -8,25 +8,25 @@
     --color-mustard-midtone: #9c7830;
 }
 
-* {
+/** {
     font-family: "Rubik", sans-serif;
     box-sizing: border-box;
     font-weight: 400;
     color: var(--color-black);
-    -webkit-font-smoothing: antialiased;
+    -webkit-font-smoothing: antialiased;*/
     /* disable tap highlight color on mobile safari */
-    tap-highlight-color: rgba(0, 0, 0, 0);
+    /*tap-highlight-color: rgba(0, 0, 0, 0);
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
+}*/
 
-body {
+/*body {
     width: 100%;
     height: 100%;
-    margin: 0 auto;
+    margin: 0 auto;*/
     /* disable double tap to zoom on mobile */
-    touch-action: manipulation;
+    /*touch-action: manipulation;
     transition: background-color 0.2s ease-out;
-}
+}*/
 
 #wrapper {
     position: absolute;
@@ -37,7 +37,7 @@ body {
     align-items: center;
 }
 
-form {
+/*form {
     width: 100%;
     max-width: 340px;
     padding: 26px 18px;
@@ -48,14 +48,14 @@ form {
     align-items: center;
     background-color: #fffef9;
 }
-
-    form > div {
+*/
+/*    form > div {
         margin-bottom: 32px;
     }
 
         form > div:last-child {
             margin-bottom: 0;
-        }
+        }*/
 
 .number-input-container {
     width: 80%;
@@ -63,7 +63,7 @@ form {
     grid-template-columns: 48px auto 48px;
 }
 
-label {
+/*label {
     display: inline-block;
     margin-bottom: 4px;
     font-size: 12px;
@@ -71,7 +71,7 @@ label {
     letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--color-blue-dark);
-}
+}*/
 
 .number-input {
     width: 100%;

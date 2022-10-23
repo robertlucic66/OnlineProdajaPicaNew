@@ -4,6 +4,7 @@
     ViewData["Title"] = "Košarica";
 }
 
+<partial name="_Notification" />
 <h1>Košarica</h1>
 
 
@@ -34,16 +35,63 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
+                   @{
+                        string nameofform = "changeQuantityForm" + item.Id;
+                        string nameofinput = "changeQuantityInput" + item.Id;
+                    }
+
+                    @using (Html.BeginForm("ChangeQuantity", "Cart", new { id = item.Id }, FormMethod.Post, true, new{ @id = nameofform })){
+                        <td>
+                                <input style="width:80px;" id="@nameofinput" type="number" min="1" value="@item.Quantity" name="quantity" onchange="myFunction(@item.Id)" />
+                        </td>                      
+                    }
+
+
+@*
+                    <form id="forma" asp-action="changeQuantity" asp-route-id="@item.Id">
+                        <div class="number-input">
+                            <button tabindex="-1" type="button" onclick="" class="btn-decrement" aria-label="Decrement">-</button>
+                            <input class="quantity" min="0" max="20" name="quantity" value="@item.Quantity" type="number">
+                            <button id="baton" tabindex="-1" type="button" class="btn-increment" aria-label="Increment">+</button>
+                        </div>
+                    </form>*@
             <td>
                 <img src=@item.ImageUrl style="height:50px;" />
             </td>
             <td>
-                <a asp-action="RemoveFromCart" asp-route-id="@item.Id">Delete</a>
+                <a class="btn btn-danger" asp-action="RemoveFromCart" asp-route-id="@item.Id">Izbriši</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+@{
+    int count = Model.Count();
+    if(count < 1){
+    <div>
+            <h2 style="color:red; margin-top:50px; margin-bottom:30px;">Nema proizvoda u košarici...</h2>
+            @Html.ActionLink("Nastavi do unosa podataka", "AddCustomerInfo", "", htmlAttributes: new { @class = "btn btn-primary" })
+            @Html.ActionLink("Nastavi kupovinu", "Index", "Home", "", new { @class = "btn btn-default" })        
+    </div>
+    }else{
+    @Html.ActionLink("Nastavi do unosa podataka", "AddCustomerInfo", "", htmlAttributes: new { @class = "btn btn-primary" })
+    @Html.ActionLink("Nastavi kupovinu", "Index", "Home", "", new { @class = "btn btn-default" })
+    }
+}
+
+
+<script type="text/javascript">
+
+    function myFunction(id) {
+        var nameofform = 'changeQuantityForm' + id;
+        var nameofinput = 'changeQuantityInput' + id;
+        var form = document.getElementById(nameofform);
+        var myInput = document.getElementById(nameofinput);
+        if (myInput.value >= 1) {
+            form.submit();
+            console.log("form submited");
+        }
+    }
+</script>
+
